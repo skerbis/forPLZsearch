@@ -62,7 +62,7 @@ public static function getPlaces($table = null, $type = 'json', $plz = null, $ti
             'descriptionhtml'      =>      '
                 <h4>' . $place->$title . '</h4>
                 <p>' . $place->$adress . '<br/>
-                ' . $place->$postcode . ' ' . $place->$ort . '</p>
+                ' . $place->$postcode . ' ' . $place->$city . '</p>
                 <p>' . $extra . '</p>',
 
         );

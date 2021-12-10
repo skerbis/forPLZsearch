@@ -87,6 +87,6 @@ public static function getPlaces($table = null, $type = 'json', $plz = null, $ti
     }
 }
 else { return null;}
-
+}
 }
 

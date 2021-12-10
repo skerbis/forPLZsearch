@@ -1,27 +1,34 @@
 <div class="uk-margin">
-    <form class="uk-search uk-search-default" action="<?php echo rex_getUrl('REX_ARTICLE_ID')?>#map">
-        <span uk-search-icon></span>
-        <input class="uk-search-input" name="plz" type="search" placeholder="Search">
+    <form class="" id="search" action="<?php echo rex_getUrl('REX_ARTICLE_ID')?>#map">
+ <input class="uk-search-input" id="one" name="plz" type="text" placeholder="PLZ">
+<input class="uk-search-input" id="two" name="distance" type="text" value = 10 placeholder="Search">
+        <button type="submit">Eingaben absenden</button>
     </form>
 </div>
 
 <?php
-// Geodaten und Name der eingegebenen PLZ auslesen    
+$geoJson = plzsearch::getPlaces('rex_kunden', 'json');    
 $placedata = plzsearch::searchByPostCode(rex_request('plz','int'));
+$distance =  rex_request('distance','int');          
 $lat = $placedata['lat'];
-$lon = $placedata['lon'];          
+$lon = $placedata['lon'];
 $searchplace = $placedata['place_name'];
-// Ermittele die Postleitzahlen im Umfeld          
-$plz = plzsearch::searchByLatLon($lat, $lon, $distance = 10);
+$plz = plzsearch::searchByLatLon($lat, $lon, $distance);        
+$cood = plzsearch::getPlaces('rex_kunden', 'latlon',$plz);    
+if ($cood==null)
+{
+ $cood = plzsearch::getPlaces('rex_kunden', 'latlon');  
+ $bounds =  'map.fitBounds(markers.getBounds())';   
+}
+else
+{
+ $bounds =  'var bounds = new L.LatLngBounds(['.$cood.']);
+ map.fitBounds(bounds)';
+}
+$dataset =  plzsearch::getPlaces('rex_kunden', 'dataset', $plz);  
 
-// Finde Datensätze mit den gefundenen PLZ und erstelle das GeoJson für Leaflet          
-$geoJson = plzsearch::getPlaces('rex_kunden', 'json');
-
-// Bind-Koordinaten für die Map
-$latlon = '[' . plzsearch::getPlaces('rex_kunden', 'latlon', $plz) . ']';
-
-// Yorm-Dataset zur weiteren Verarbeitung          
-$dataset =  plzsearch::getPlaces('rex_kunden', 'dataset', $plz);         
+        
+          
 ?>
 
 
@@ -72,25 +79,18 @@ $dataset =  plzsearch::getPlaces('rex_kunden', 'dataset', $plz);
 
     return container
   },
-
   _zoomMin: function () {
     if (this.options.minBounds) {
       return this._map.fitBounds(this.options.minBounds);
     }
-
     this._map.setZoom(this._map.getMinZoom())
   },
-
   _updateDisabled: function () {
     var map = this._map
       , className = "leaflet-disabled"
-
     L.DomUtil.removeClass(this._zoomInButton, className)
     L.DomUtil.removeClass(this._zoomOutButton, className)
     L.DomUtil.removeClass(this._zoomMinButton, className)
-
-  
-
     if (map._zoom === map.getMinZoom()) {
       L.DomUtil.addClass(this._zoomMinButton, className)
     }
@@ -98,12 +98,6 @@ $dataset =  plzsearch::getPlaces('rex_kunden', 'dataset', $plz);
 })
 
 
-    
-    
-    
-    
-    
-    var bounds = new L.LatLngBounds(<?= $latlon ?>);
     var tiles = L.tileLayer('/osmtype/german/{z}/{x}/{y}.png', {
         zoomControl: false,
         maxZoom: 16,
@@ -126,13 +120,14 @@ $dataset =  plzsearch::getPlaces('rex_kunden', 'dataset', $plz);
             layer.bindPopup(feature.descriptionhtml);
         }
    });
-
+ 
+    <?=$bounds?>
+    
     markers.addLayer(geoJsonLayer);
-
     map.addLayer(markers);
-    map.fitBounds(bounds);
+   
 
-   // map.fitBounds(markers.getBounds());
+
 map.addControl(new L.Control.ZoomMin())
     // map.addControl(new L.Control.ZoomMin())
 </script>

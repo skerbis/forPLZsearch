@@ -6,20 +6,23 @@
 </div>
 
 <?php
+// Geodaten und Name der eingegebenen PLZ auslesen    
 $placedata = plzsearch::searchByPostCode(rex_request('plz','int'));
 $lat = $placedata['lat'];
-$lon = $placedata['lon'];
+$lon = $placedata['lon'];          
 $searchplace = $placedata['place_name'];
+// Ermittele die Postleitzahlen im Umfeld          
 $plz = plzsearch::searchByLatLon($lat, $lon, $distance = 10);
-#dump($plz);
 
-
+// Finde Datensätze mit den gefundenen PLZ und erstelle das GeoJson für Leaflet          
 $geoJson = plzsearch::getPlaces('rex_kunden', 'json');
-#dump($geoJson);
+
+// Bind-Koordinaten für die Map
 $latlon = '[' . plzsearch::getPlaces('rex_kunden', 'latlon', $plz) . ']';
+
+// Yorm-Dataset zur weiteren Verarbeitung          
 $dataset =  plzsearch::getPlaces('rex_kunden', 'dataset', $plz);         
-          
-#dump($latlon); ?>
+?>
 
 
 

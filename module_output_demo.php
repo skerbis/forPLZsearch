@@ -7,6 +7,7 @@
 </div>
 
 <?php
+$bounds = '';    
 $geoJson = plzsearch::getPlaces('rex_kunden', 'json');    
 $placedata = plzsearch::searchByPostCode(rex_request('plz','int'));
 $distance =  rex_request('distance','int');          
@@ -18,12 +19,14 @@ $cood = plzsearch::getPlaces('rex_kunden', 'latlon',$plz);
 if ($cood==null)
 {
  $cood = plzsearch::getPlaces('rex_kunden', 'latlon');  
- $bounds =  'map.fitBounds(markers.getBounds())';   
+ $bounds =  'map.fitBounds(markers.getBounds())';  
+ $result = true;   
 }
 else
 {
  $bounds =  'var bounds = new L.LatLngBounds(['.$cood.']);
  map.fitBounds(bounds)';
+ $result = false;    
 }
 $dataset =  plzsearch::getPlaces('rex_kunden', 'dataset', $plz);  
 
@@ -100,8 +103,8 @@ $dataset =  plzsearch::getPlaces('rex_kunden', 'dataset', $plz);
 
     var tiles = L.tileLayer('/osmtype/german/{z}/{x}/{y}.png', {
         zoomControl: false,
-        maxZoom: 16,
-        minZoom: 0,
+        maxZoom: 18,
+        minZoom: 4,
         attribution: '&copy; Map: <a href="/osmtype/german/{z}/{x}/{y}.png">OpenStreetMap</a> contributors'
     });
 
@@ -113,7 +116,12 @@ $dataset =  plzsearch::getPlaces('rex_kunden', 'dataset', $plz);
         })
         .addLayer(tiles);
 
-
+<?php if (rex_request('plz','int')) { ?>
+     var latLong=[<?=$lat?>, <?=$lon?>];
+     var currentDiameter = L.circle(latLong, <?=$distance?> * 1000);
+  currentDiameter.addTo(map); 
+   <?php  } ?>
+    
     var markers = L.markerClusterGroup();
     var geoJsonLayer = L.geoJson(geoJsonData, {
         onEachFeature: function(feature, layer) {

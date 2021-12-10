@@ -46,7 +46,7 @@ public static function getPlaces($table = null, $type = 'json', $plz = null, $ti
         $query->whereListContains('plz', $plz);
     }
     $places = $query->find();
-
+    if ($places) {
     foreach ($places as $place) {
         $lon = floatval($place->lon);
         $lat = floatval($place->lat);
@@ -86,7 +86,7 @@ public static function getPlaces($table = null, $type = 'json', $plz = null, $ti
         return   implode(", ", $latlon);
     }
 }
-
+else { return null;}
 
 }
 

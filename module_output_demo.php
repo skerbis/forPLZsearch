@@ -13,10 +13,8 @@ $placedata = plzsearch::searchByPostCode(rex_request('plz','int'));
 $distance =  rex_request('distance','int');          
 $lat = $placedata['lat'];
 $lon = $placedata['lon'];
-$plz = plzsearch::searchByLatLon($lat, $lon, $distance);    
-dump($plz);          
-$cood = plzsearch::getPlaces('rex_kunden', 'latlon',$plz);  
-dump($cood);          
+$plz = plzsearch::searchByLatLon($lat, $lon, $distance);           
+$cood = plzsearch::getPlaces('rex_kunden', 'latlon',$plz);            
 if ($cood==null || $plz == null)
 {
  $cood = plzsearch::getPlaces('rex_kunden', 'latlon');  
@@ -29,13 +27,9 @@ else
  map.fitBounds(bounds)';
  $result = true;    
 }
-#$dataset =  plzsearch::getPlaces('rex_kunden', 'dataset', $plz);  
-
-        
-          
+// Alle gefunden Datensätze zur weiteren Verarbeitung z.B. zur Listenausgabe          
+// $dataset =  plzsearch::getPlaces('rex_kunden', 'dataset', $plz);         
 ?>
-
-
 
 <div id="map" style="min-height: 600px; height: 30vh; display: block; width: 100%;"></div>
 

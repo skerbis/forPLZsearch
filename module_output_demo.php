@@ -9,26 +9,27 @@
 <?php
 $bounds = '';    
 $geoJson = plzsearch::getPlaces('rex_kunden', 'json');    
-$placedata = plzsearch::searchByPostCode(rex_request('plz','int'));
+$placedata = plzsearch::searchByPostCode(rex_request('plz','int'));       
 $distance =  rex_request('distance','int');          
 $lat = $placedata['lat'];
 $lon = $placedata['lon'];
-$searchplace = $placedata['place_name'];
-$plz = plzsearch::searchByLatLon($lat, $lon, $distance);        
-$cood = plzsearch::getPlaces('rex_kunden', 'latlon',$plz);    
-if ($cood==null)
+$plz = plzsearch::searchByLatLon($lat, $lon, $distance);    
+dump($plz);          
+$cood = plzsearch::getPlaces('rex_kunden', 'latlon',$plz);  
+dump($cood);          
+if ($cood==null || $plz == null)
 {
  $cood = plzsearch::getPlaces('rex_kunden', 'latlon');  
  $bounds =  'map.fitBounds(markers.getBounds())';  
- $result = true;   
+ $result = false;   
 }
 else
-{
+{   
  $bounds =  'var bounds = new L.LatLngBounds(['.$cood.']);
  map.fitBounds(bounds)';
- $result = false;    
+ $result = true;    
 }
-$dataset =  plzsearch::getPlaces('rex_kunden', 'dataset', $plz);  
+#$dataset =  plzsearch::getPlaces('rex_kunden', 'dataset', $plz);  
 
         
           
@@ -116,7 +117,7 @@ $dataset =  plzsearch::getPlaces('rex_kunden', 'dataset', $plz);
         })
         .addLayer(tiles);
 
-<?php if (rex_request('plz','int')) { ?>
+<?php if (rex_request('plz','int') && $result==true) { ?>
      var latLong=[<?=$lat?>, <?=$lon?>];
      var currentDiameter = L.circle(latLong, <?=$distance?> * 1000);
   currentDiameter.addTo(map); 

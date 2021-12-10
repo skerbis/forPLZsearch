@@ -1,7 +1,7 @@
 <div class="uk-margin">
-    <form class="" id="search" action="<?php echo rex_getUrl('REX_ARTICLE_ID')?>#map">
- <input class="uk-search-input" id="one" name="plz" type="number" placeholder="PLZ">
-<input class="uk-search-input" id="two" name="distance" type="number" value = 10 placeholder="Search">
+    <form class="uk-search" id="search" action="<?php echo rex_getUrl('REX_ARTICLE_ID')?>#map">
+ <input class="uk-search-input" id="one" name="plz" required type="text" pattern="[0-9]*" placeholder="PLZ">
+<input class="uk-search-input" id="two" name="distance" required type="numer" value = 10 placeholder="Search">
         <button type="submit">Eingaben absenden</button>
     </form>
 </div>
@@ -35,15 +35,11 @@ $dataset =  plzsearch::getPlaces('rex_kunden', 'dataset', $plz);
 
 <div id="map" style="min-height: 600px; height: 30vh; display: block; width: 100%;"></div>
 
-<!-- in den Head des Templates -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.6.0/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.6.0/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script src="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.3/dist/leaflet.markercluster-src.min.js"></script>
-<!-- ENDE: in den Head des Templates -->
-
-
 
 <script type="text/javascript">
     <?php echo $geoJson; ?>

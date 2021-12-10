@@ -9,7 +9,19 @@ public static function searchByLatLon($lat = 51.546500, $lon = 6.595200, $distan
     {
 	    $distance = 10; 
     }
-    $data = rex_sql::factory();
+/* HINWEIS für eine bessere Performance
+Anstelle der rex_geocodes sollte besser eine View aus beiden Tabellen erstellt werden und diese durchsucht werden.
+
+z.B. 
+select `rex_kunden`.`lat` AS `lat`,
+`rex_kunden`.`lon` AS `lon`,
+`rex_kunden`.`plz` AS `plz`, 
+`rex_geocodes`.`postal_code` AS `postal_code` 
+from (`rex_kunden` join `rex_geocodes`) 
+where `rex_geocodes`.`postal_code` = `rex_kunden`.`plz`
+*/	
+	
+    $data = rex_sql::factory();	
     $data->setQuery('SELECT id, postal_code, place_name, lat, lon, ( 3959 * acos( cos( radians(:latvalue) ) * cos( radians( lat ) ) 
 * cos( radians( lon ) - radians(:lonvalue) ) + sin( radians(:latvalue) ) * sin(radians(lat)) )) AS distance 
 FROM rex_geocodes

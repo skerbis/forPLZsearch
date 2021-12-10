@@ -1,7 +1,7 @@
 <div class="uk-margin">
-    <form class="uk-search" id="search" action="<?php echo rex_getUrl('REX_ARTICLE_ID')?>#map">
- <input class="uk-search-input" id="one" name="plz" required type="text" pattern="[0-9]*" placeholder="PLZ">
-<input class="uk-search-input" id="two" name="distance" required type="numer" value = 10 placeholder="Search">
+    <form class="uk-search uk-search-default" id="search" action="<?php echo rex_getUrl('REX_ARTICLE_ID')?>#map">
+ <input class="uk-search-input" id="one" name="plz" type="text" pattern="[0-9]*" placeholder="PLZ">
+<input class="uk-search-input" id="two" name="distance" type="number" value = 10 placeholder="Search">
         <button type="submit">Eingaben absenden</button>
     </form>
 </div>

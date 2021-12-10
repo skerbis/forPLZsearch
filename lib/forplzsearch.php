@@ -3,7 +3,7 @@ class plzsearch
 {
 
 // Sucht die entprechenden Postleitzahlen nach Längen und Breiten, es kann eine Distance-Angabe übergeben werden
-public static function searchByLatLon($lat = 51.546500, $lon = 6.595200, $distance = 10)
+public static function searchByLatLon($lat = 51.546500, $lon = 6.595200, $distance = 10, $table = 'rex_geocodes')
 {
     if ($distance < 10) 
     {
@@ -24,7 +24,7 @@ where `rex_geocodes`.`postal_code` = `rex_kunden`.`plz`
     $data = rex_sql::factory();	
     $data->setQuery('SELECT id, postal_code, place_name, lat, lon, ( 3959 * acos( cos( radians(:latvalue) ) * cos( radians( lat ) ) 
 * cos( radians( lon ) - radians(:lonvalue) ) + sin( radians(:latvalue) ) * sin(radians(lat)) )) AS distance 
-FROM rex_geocodes
+FROM '.$table.'
 HAVING distance < :distvalue 
 ORDER BY distance', ['latvalue' => $lat, 'lonvalue' => $lon, 'distvalue' => $distance]);
 

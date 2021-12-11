@@ -7,18 +7,14 @@ z.B.
 
 select `rex_kunden`.`id` AS `id`,
 `rex_geocodes`.`place_name` AS `place_name`,
-`rex_kunden`.`lat` AS `lat`,
-`rex_kunden`.`lon` AS `lon`,
-`rex_geocodes`.`postal_code` AS `postal_code`,
+`rex_geocodes`.`lat` AS `lat`,
+`rex_geocodes`.`lon` AS `lon`,
 `rex_geocodes`.`country_code` AS `country_code`,
+`rex_geocodes`.`postal_code` AS `postal_code`,
 `rex_kunden`.`plz` AS `plz` 
 from (`rex_kunden` join `rex_geocodes`) 
 where `rex_geocodes`.`postal_code` = `rex_kunden`.`plz`
 */
-	
-	
-
-	
 
 // Sucht die entprechenden Postleitzahlen nach Längen und Breiten, es kann eine Distance-Angabe übergeben werden
 public static function searchByLatLon($lat = 51.546500, $lon = 6.595200, $distance = 10, $country = 'DE', $table = 'rex_geocodes', $zip = 'postal_code')

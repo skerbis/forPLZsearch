@@ -3,7 +3,7 @@ class plzsearch
 {
 
 // Sucht die entprechenden Postleitzahlen nach Längen und Breiten, es kann eine Distance-Angabe übergeben werden
-public static function searchByLatLon($lat = 51.546500, $lon = 6.595200, $distance = 10, $table = 'rex_geocodes', $zip = 'postal_code' )
+public static function searchByLatLon($lat = 51.546500, $lon = 6.595200, $distance = 10, $country = 'DE', $table = 'rex_geocodes', $zip = 'postal_code')
 {
     if ($distance < 10) 
     {
@@ -13,9 +13,9 @@ public static function searchByLatLon($lat = 51.546500, $lon = 6.595200, $distan
     $data = rex_sql::factory();	
     $data->setQuery('SELECT id, '.$zip.', lat, lon, ( 3959 * acos( cos( radians(:latvalue) ) * cos( radians( lat ) ) 
 * cos( radians( lon ) - radians(:lonvalue) ) + sin( radians(:latvalue) ) * sin(radians(lat)) )) AS distance 
-FROM '.$table.'
+FROM '.$table.' WHERE country_code = :country
 HAVING distance < :distvalue 
-ORDER BY distance', ['latvalue' => $lat, 'lonvalue' => $lon, 'distvalue' => $distance]);
+ORDER BY distance', ['latvalue' => $lat, 'lonvalue' => $lon, 'distvalue' => $distance, 'country' => $country]);
 
     $datas = $data->getArray();
     $plz = [];
@@ -29,10 +29,10 @@ ORDER BY distance', ['latvalue' => $lat, 'lonvalue' => $lon, 'distvalue' => $dis
 }
 
 // Sucht nach der übergebenen PLZ
-public static function searchByPostCode($postcode)
+public static function searchByPostCode($postcode, $country = 'DE')
 {
     $plzsearch = rex_sql::factory();
-    $plzsearch->setQuery('SELECT lat, lon, place_name FROM rex_geocodes WHERE postal_code = :plz LIMIT 1', ['plz' => $postcode]);
+    $plzsearch->setQuery('SELECT lat, lon, place_name FROM rex_geocodes WHERE postal_code = :plz AND country_code = :country LIMIT 1', ['plz' => $postcode, 'country' => $country]);
     $datas = $plzsearch->getArray();
     return $datas[0];
 }

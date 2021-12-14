@@ -8,11 +8,14 @@
 
 <?php
 $bounds = '';     
-$placedata = plzsearch::searchByPostCode(rex_request('plz','int'));          
-$distance =  rex_request('distance','int');          
+$placedata = plzsearch::searchByPostCode(rex_request('plz','string'));  
+#dump($placedata);          
+$distance =  rex_request('distance','int');  
+#dump($distance);          
+          
 $lat = $placedata['lat'];
 $lon = $placedata['lon'];
-$plz = plzsearch::searchByLatLon($lat, $lon, $distance, 'rex_kunden', 'plz');             
+$plz = plzsearch::searchByLatLon($lat, $lon, $distance, 'DE', 'rex_geodata');             
 $cood = plzsearch::getPlaces('rex_kunden', 'latlon',$plz);           
 if (!$cood)
 {
@@ -129,9 +132,24 @@ $geoJson = plzsearch::getPlaces('rex_kunden', 'json');
  
     <?=$bounds?>
     
+            function onLocationFound(e) {
+    var radius = e.accuracy;
+
+    L.marker(e.latlng).addTo(map)
+        .bindPopup("Du bist ungefähr hier im Umkreis von " + radius + " Metern").openPopup();
+
+    L.circle(e.latlng, radius).addTo(map);
+}
+/*
+// Eigener Standort
+map.locate();
+map.on('locationfound', onLocationFound);
+*/    
+    
+    
     markers.addLayer(geoJsonLayer);
     map.addLayer(markers);
-   
+
 
 
 map.addControl(new L.Control.ZoomMin())

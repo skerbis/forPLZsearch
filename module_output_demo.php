@@ -7,9 +7,10 @@
 </div>
 
 <?php
-$bounds = $plz = '';     
-
-if ($placedata = plzsearch::searchByPostCode(rex_request('plz','string')));
+$bounds = $plz;     
+$distance = 10; 
+          
+if ($placedata = plzsearch::searchByPostCode(rex_request('plz','string'))!=false);
 {          
 $lat = $placedata['lat'];
 $lon = $placedata['lon'];

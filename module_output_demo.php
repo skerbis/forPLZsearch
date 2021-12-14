@@ -7,31 +7,34 @@
 </div>
 
 <?php
-$bounds = $plz = '';     
-$distance = 10; 
-          
-if ($placedata = plzsearch::searchByPostCode(rex_request('plz','string'))!=false);
-{          
-$lat = $placedata['lat'];
+$bounds = $cood = $lat = $lon = '';     
+$placedata = plzsearch::searchByPostCode(rex_request('plz','string'));            
+$distance =  rex_request('distance','int');          
+if($placedata!=false)
+{     
+$lat = $placedata['lat'];  
 $lon = $placedata['lon'];
-$plz = plzsearch::searchByLatLon($lat, $lon, $distance, 'DE', 'rex_geodata');             
-}         
-$distance =  rex_request('distance','int');  
-         
-$cood = plzsearch::getPlaces('rex_kunden', 'latlon',$plz);           
-if (!$cood)
+}
+$plz = plzsearch::searchByLatLon($lat, $lon, $distance, $country = 'DE', $table = 'rex_geodata', $zip = 'postal_code');  
+          
+$cood = plzsearch::getPlaces('rex_kunden', 'latlon',$plz);  
+dump($cood);
+          $geoJson = plzsearch::getPlaces('rex_kunden', 'json');            
+          
+if (!$cood || $cood =='[0,0]')
 {
- $bounds =  'map.fitBounds(markers.getBounds());alert("hallo");';  
+ $bounds =  'map.fitBounds(markers.getBounds());';  
  $result = false;   
 }
 else
-{   
- $bounds =  'var bounds = new L.LatLngBounds(['.$cood.']);
- map.fitBounds(bounds);';
+{ 
+    
+  $bounds =  'var bounds = new L.LatLngBounds(['.$cood.']);
+  map.fitBounds(bounds);';
  $result = true;    
 }
-$geoJson = plzsearch::getPlaces('rex_kunden', 'json');            
-#$dataset =  plzsearch::getPlaces('rex_kunden', 'dataset', $plz);  
+          
+$dataset =  plzsearch::getPlaces('rex_kunden', 'dataset', $plz);  
 
         
           
@@ -106,7 +109,7 @@ $geoJson = plzsearch::getPlaces('rex_kunden', 'json');
 
     var tiles = L.tileLayer('/osmtype/german/{z}/{x}/{y}.png', {
         zoomControl: false,
-        maxZoom: 18,
+        maxZoom: 10,
         minZoom: 4,
         attribution: '&copy; Map: <a href="/osmtype/german/{z}/{x}/{y}.png">OpenStreetMap</a> contributors'
     });
@@ -132,25 +135,11 @@ $geoJson = plzsearch::getPlaces('rex_kunden', 'json');
         }
    });
  
-    <?=$bounds?>
-    
-            function onLocationFound(e) {
-    var radius = e.accuracy;
-
-    L.marker(e.latlng).addTo(map)
-        .bindPopup("Du bist ungefähr hier im Umkreis von " + radius + " Metern").openPopup();
-
-    L.circle(e.latlng, radius).addTo(map);
-}
-/*    
-map.locate();
-map.on('locationfound', onLocationFound);
-*/    
-    
+   
     
     markers.addLayer(geoJsonLayer);
     map.addLayer(markers);
-
+    <?=$bounds?>
 
 
 map.addControl(new L.Control.ZoomMin())

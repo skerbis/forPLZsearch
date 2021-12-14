@@ -72,6 +72,16 @@ public static function getPlaces($table = null, $type = 'json', $plz = null, $ti
         $lat = floatval($place->lat);
         $coordinates =  array('type'  => 'Point', 'coordinates' => [$lon, $lat]);
         // GeoJSON
+	if ($lat=='')
+	{
+		continue; 
+	}
+		if ($lon=='')
+	{
+		continue; 
+	}
+	    
+	    
         $points[] = array(
             'type'       =>     'Feature',
             'id'        =>     $place->id,

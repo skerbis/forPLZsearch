@@ -7,15 +7,16 @@
 </div>
 
 <?php
-$bounds = '';     
-$placedata = plzsearch::searchByPostCode(rex_request('plz','string'));  
-#dump($placedata);          
-$distance =  rex_request('distance','int');  
-#dump($distance);          
-          
+$bounds = $plz = '';     
+
+if ($placedata = plzsearch::searchByPostCode(rex_request('plz','string')));
+{          
 $lat = $placedata['lat'];
 $lon = $placedata['lon'];
 $plz = plzsearch::searchByLatLon($lat, $lon, $distance, 'DE', 'rex_geodata');             
+}         
+$distance =  rex_request('distance','int');  
+         
 $cood = plzsearch::getPlaces('rex_kunden', 'latlon',$plz);           
 if (!$cood)
 {
@@ -140,8 +141,7 @@ $geoJson = plzsearch::getPlaces('rex_kunden', 'json');
 
     L.circle(e.latlng, radius).addTo(map);
 }
-/*
-// Eigener Standort
+/*    
 map.locate();
 map.on('locationfound', onLocationFound);
 */    

@@ -14,7 +14,6 @@ from (`rex_kunden` join `rex_geocodes`)
 where `rex_geocodes`.`postal_code` = `rex_kunden`.`plz`
 */
 	
-
 // Sucht die entprechenden Postleitzahlen nach Längen und Breiten, es kann eine Distance-Angabe übergeben werden
 public static function searchByLatLon($lat = 51.546500, $lon = 6.595200, $distance = 10, $country = 'DE', $table = 'rex_geocodes', $zip = 'postal_code')
 {
@@ -47,7 +46,14 @@ public static function searchByPostCode($postcode, $country = 'DE')
     $plzsearch = rex_sql::factory();
     $plzsearch->setQuery('SELECT lat, lon, place_name FROM rex_geocodes WHERE postal_code = :plz AND country_code = :country LIMIT 1', ['plz' => $postcode, 'country' => $country]);
     $datas = $plzsearch->getArray();
-    return $datas[0];
+    if (count($datas)>0)
+	{	
+	return $datas[0];
+	}
+	else 
+	{
+		return false; 
+	}
 }
 
 // Gibt alle oder die gefundenen Standorte aus, filterbar nach PLZ, Ausgabe als GeoJSON, Dataset, oder als JS-Array (latlon)

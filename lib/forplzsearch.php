@@ -1,9 +1,7 @@
 <?php
 class plzsearch
 {
-
-/* Für die Suchtabelle sollte eine View erstellt werden, die die Datenmenge reduziert und mit der eigenen Tabelle abgleicht: 
-z.B. 
+/* View als rex_geodata anlegen 
 
 select `rex_kunden`.`id` AS `id`,
 `rex_geocodes`.`place_name` AS `place_name`,
@@ -15,6 +13,7 @@ select `rex_kunden`.`id` AS `id`,
 from (`rex_kunden` join `rex_geocodes`) 
 where `rex_geocodes`.`postal_code` = `rex_kunden`.`plz`
 */
+	
 
 // Sucht die entprechenden Postleitzahlen nach Längen und Breiten, es kann eine Distance-Angabe übergeben werden
 public static function searchByLatLon($lat = 51.546500, $lon = 6.595200, $distance = 10, $country = 'DE', $table = 'rex_geocodes', $zip = 'postal_code')
@@ -104,5 +103,6 @@ public static function getPlaces($table = null, $type = 'json', $plz = null, $ti
 else { return false;}
 }
 }
+
 
 

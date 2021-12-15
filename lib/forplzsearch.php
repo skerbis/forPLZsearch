@@ -7,8 +7,8 @@ z.B.
 
 select `rex_kunden`.`id` AS `id`,
 `rex_geocodes`.`place_name` AS `place_name`,
-`rex_geocodes`.`lat` AS `lat`,
-`rex_geocodes`.`lon` AS `lon`,
+`rex_rex_kunden`.`lat` AS `lat`,
+`rex_rex_kunden`.`lon` AS `lon`,
 `rex_geocodes`.`country_code` AS `country_code`,
 `rex_geocodes`.`postal_code` AS `postal_code`,
 `rex_kunden`.`plz` AS `plz` 

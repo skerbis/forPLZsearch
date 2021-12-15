@@ -25,7 +25,7 @@ public static function searchByLatLon($lat = 51.546500, $lon = 6.595200, $distan
     }
 	
     $data = rex_sql::factory();	
-    $data->setQuery('SELECT id, '.$zip.', lat, lon, ( 3959 * acos( cos( radians(:latvalue) ) * cos( radians( lat ) ) 
+    $data->setQuery('SELECT id, '.$zip.', lat, lon, ( 6371 * acos( cos( radians(:latvalue) ) * cos( radians( lat ) ) 
 * cos( radians( lon ) - radians(:lonvalue) ) + sin( radians(:latvalue) ) * sin(radians(lat)) )) AS distance 
 FROM '.$table.' WHERE country_code = :country
 HAVING distance <= :distvalue 

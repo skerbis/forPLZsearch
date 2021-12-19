@@ -55,19 +55,21 @@ public static function searchByPostCode($postcode, $country = 'DE')
 }
 
 // Gibt alle oder die gefundenen Standorte aus, filterbar nach PLZ, Ausgabe als GeoJSON, Dataset, oder als JS-Array (latlon)
-public static function getPlaces($table = null, $type = 'json', $plz = null, $title = 'name', $adress = 'strasse', $postcode = 'plz', $city = 'ort', $extra = '')
+public static function getPlaces($table = null, $type = 'json', $plz = null, $custom_query = null, $title = 'name', $adress = 'strasse', $postcode = 'plz', $city = 'ort', $extra = '')
 {
-	$latlon = [];
+    $latlon = [];
     $jsondata = '';
     $table = rex_yform_manager_table::get($table);
     $query = $table->query();
     if ($plz) {
-     //   $query->whereListContains('plz', $plz);
-		$query->whereRaw('CONCAT(",", plz, ",") REGEXP ",(' . implode('|', $plz) . '),"');
+	$query->whereRaw('CONCAT(",", plz, ",") REGEXP ",(' . implode('|', $plz) . '),"');
+    }
+    if ($custom_query) {
+	$query->whereRaw($custom_query);    
     }
     $places = $query->find();
   
-	
+
     if ($places) {
     foreach ($places as $place) {
         $lon = floatval($place->lon);

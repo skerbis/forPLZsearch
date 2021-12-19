@@ -18,8 +18,8 @@ $lon = $placedata['lon'];
 $plz = plzsearch::searchByLatLon($lat, $lon, $distance, $country = 'DE', $table = 'rex_geodata', $zip = 'postal_code');  
           
 $cood = plzsearch::getPlaces('rex_kunden', 'latlon',$plz);  
-dump($cood);
-          $geoJson = plzsearch::getPlaces('rex_kunden', 'json');            
+
+$geoJson = plzsearch::getPlaces('rex_kunden', 'json');            
           
 if (!$cood || $cood =='[0,0]')
 {

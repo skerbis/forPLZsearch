@@ -41,7 +41,7 @@ ORDER BY distance', ['latvalue' => $lat, 'lonvalue' => $lon, 'distvalue' => $dis
         return false;
     }
 
-    // Sucht nach der übergebenen PLZ
+    // Sucht nach der übergebenen PLZ und gibt die Koordinaten aus.
     public static function searchByPostCode($postcode, $country = 'DE')
     {
         $plzsearch = rex_sql::factory();
